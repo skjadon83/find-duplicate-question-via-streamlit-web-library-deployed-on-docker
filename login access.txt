@@ -1,0 +1,62 @@
+/////in cmd or git bash,cd current folder///////////
+docker build -t app .
+
+docker run -p 8501:8501 app:latest
+
+
+
+/////////////for kubernetes////////////
+/////// sudhirjadon/app my repository name////////
+in poer cell
+
+->docker images
+
+->ddocker tag d8d0aaa6d5c5 sudhirjadon/app 
+
+->docker push sudhirjadon/app
+
+->kubectl create deployment varsha --image=sudhirjadon/app  
+
+PS C:\Users\Hp\.kube> ->kubectl get deployment
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+newapp   0/1     1            0           42m
+varsha   1/1     1            1           80s
+
+
+PS C:\Users\Hp\.kube> ->kubectl get pods
+NAME                      READY   STATUS             RESTARTS   AGE
+newapp-6c5fc54d8-knm9g    0/1     ImagePullBackOff   0          43m
+varsha-55df879488-hsbtb   1/1     Running            0          2m8s
+PS C:\Users\Hp\.kube>
+
+PS C:\Users\Hp\.kube>-> kubectl expose deployment varsha --type=LoadBalancer --port=80 --target-port=80
+service/varsha exposed
+PS C:\Users\Hp\.kube>-> kubectl get svc
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        3d7h
+varsha       LoadBalancer   10.106.159.47   localhost     80:31955/TCP   6s
+
+
+kubectl expose deployment varsha --type=LoadBalancer --name=my-service
+
+
+PS C:\Users\Hp\.kube> kubectl scale --replicas=10 deployment varsha
+deployment.apps/varsha scaled
+PS C:\Users\Hp\.kube> kubectl get deployment
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+newapp   0/1     1            0           75m
+varsha   2/10    10           2           33m
+PS C:\Users\Hp\.kube> kubectl get pods
+NAME                      READY   STATUS              RESTARTS   AGE
+newapp-6c5fc54d8-knm9g    0/1     ImagePullBackOff    0          75m
+varsha-55df879488-26m77   1/1     Running             0          23s
+varsha-55df879488-2f5x6   0/1     ContainerCreating   0          23s
+varsha-55df879488-6dm8g   1/1     Running             0          23s
+varsha-55df879488-hn676   0/1     ContainerCreating   0          23s
+varsha-55df879488-hsbtb   1/1     Running             0          34m
+varsha-55df879488-jrzr5   1/1     Running             0          23s
+varsha-55df879488-pphvq   0/1     ContainerCreating   0          23s
+varsha-55df879488-ppmnk   0/1     ContainerCreating   0          23s
+varsha-55df879488-rczjl   0/1     ContainerCreating   0          24s
+varsha-55df879488-vmdz7   1/1     Running             0          23s
+PS C:\Users\Hp\.kube>
